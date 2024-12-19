@@ -2,6 +2,7 @@ package com.javaacademy.shop_management.controller;
 
 import com.javaacademy.shop_management.dto.StatusDto;
 import com.javaacademy.shop_management.service.ShopService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,8 @@ public class ShopController {
     private final ShopService shopService;
 
     @GetMapping("/shop/status")
+    @Operation(tags = "Получение списка магазинов со статусами")
     public ResponseEntity<List<StatusDto>> getShopStatus() throws IOException {
         return ResponseEntity.ok(shopService.getShopStatus());
     }
-
 }

@@ -2,13 +2,12 @@ package com.javaacademy.shop_management.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaacademy.shop_management.dto.GoodDto;
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +25,13 @@ public class GoodService {
     @Value("${server.shop.shop_nine.good.url}")
     private String urlNine;
 
-    @Schema(description = "Метод обновления цен в магазинах")
+    @Operation(summary = "Обновить цену товара", description = "Обновляет цену указанного товара")
     public void updateGoodPriceInShop(GoodDto goodDto) throws IOException {
         updateFoodPriceRequest(goodDto, urlSeven);
         updateFoodPriceRequest(goodDto, urlNine);
     }
 
-    @Schema(description = "Метод запроса на изменение цен в заданном приложении")
+    @Operation(summary = "Обновить цену товара", description = "Метод запроса на изменение цен в заданном приложении")
     private void updateFoodPriceRequest(GoodDto goodDto, String goodUrl) throws IOException {
         log.info(goodDto.toString() + "  - " + goodUrl);
         try {
@@ -42,7 +41,7 @@ public class GoodService {
                     .url(goodUrl)
                     .addHeader("Content-Type", "application/json")
                     .build();
-            Response response = okHttpClient.newCall(request).execute();
+            okHttpClient.newCall(request).execute().close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

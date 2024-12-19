@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Schema(description = "Продукт ДТО")
 public class GoodDto {
-    @Schema(description = "Название")
+    @Schema (description = "Название")
     private String name;
     @JsonProperty("new_price")
     @Schema(description = "Цена")
