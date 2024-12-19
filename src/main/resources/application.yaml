@@ -2,6 +2,12 @@ server:
   port: 8085
   shop:
     shop_seven:
-      url: "http://localhost:8081/application/status"
+      status:
+        url: "http://localhost:8081/application/status"
+      good:
+        url: "http://localhost:8081/shop/good"
     shop_nine:
-      url: "http://localhost:8082/application/status"
+      status:
+        url: "http://localhost:8082/application/status"
+      good:
+        url: "http://localhost:8082/shop/good"

@@ -3,43 +3,42 @@ package com.javaacademy.shop_management.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaacademy.shop_management.dto.StatusDto;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
+
 public class ShopService {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    @Value("${server.shop.shop_seven.url}")
-    private String url_seven;
+    @Value("${server.shop.shop_seven.status.url}")
+    private String urlSeven;
 
-    @Value("${server.shop.shop_nine.url}")
-    private String url_nine;
+    @Value("${server.shop.shop_nine.status.url}")
+    private String urlNine;
 
     public List<StatusDto> getShopStatus() throws IOException {
-        List<StatusDto> result = List.of(getRequestShopStatus(url_seven)
-                , getRequestShopStatus(url_nine));
-        log.info(result.toString());
-        return result;
+        List<StatusDto> statusDtoList = new ArrayList<StatusDto>();
+        statusDtoList.add(getRequestShopStatus(urlSeven));
+        statusDtoList.add(getRequestShopStatus(urlNine));
+        return statusDtoList;
     }
 
-    public StatusDto getRequestShopStatus(String shop_url) throws IOException {
+    private StatusDto getRequestShopStatus(String shopUrl) throws IOException {
         OkHttpClient okHttpClient = new OkHttpClient();
-        Request request = new Request.Builder().get().url(shop_url).build();
-        log.info(request.toString());
-        String responseBody = okHttpClient.newCall(request).execute().body().string();
-        log.info(responseBody);
+        Request request = new Request.Builder().get().url(shopUrl).build();
         try {
-            StatusDto statusDto = objectMapper.readValue(responseBody, StatusDto.class);
-            log.info(statusDto.toString());
-            return statusDto;
+            Response response = okHttpClient.newCall(request).execute();
+            if (response.isSuccessful() && response.body() != null) {
+                return objectMapper.readValue(response.body().string(), StatusDto.class);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
